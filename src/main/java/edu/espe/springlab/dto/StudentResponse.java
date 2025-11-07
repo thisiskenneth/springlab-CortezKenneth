@@ -13,6 +13,9 @@ public class StudentResponse {
         return id;
     }
 
+    //setters adicionales
+
+
     public void setId(Long id) {
         this.id = id;
     }
