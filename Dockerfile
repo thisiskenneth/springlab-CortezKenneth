@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 RUN gradle clean bootJar
 
-#Etapa2:Run \
+#Etapa2: Run
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar app.jar
