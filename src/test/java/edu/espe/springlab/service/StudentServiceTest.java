@@ -12,37 +12,36 @@ import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import({StudentServiceTest.class})
+@Import(StudentServiceImpl.class)
 public class StudentServiceTest {
 
+    @Autowired
+    private StudentServiceImpl service;
 
-        @Autowired
-        private StudentServiceImpl service;
+    @Autowired
+    private StudentRepository repository;
 
-        @Autowired
-        private StudentRepository repository;
+    @Test
+    void shouldNotAllowDuplicateEmail() {
+        // Crear y guardar un estudiante existente
+        Student existing = new Student();
+        existing.setFullName("Existing User");
+        existing.setEmail("duplicate@example.com");
+        existing.setBirthDate(LocalDate.of(2000, 10, 10));
+        existing.setActive(true);
 
-        @Test
-        void shouldNotAllowDuplicateEmail(){
-            Student existing = new Student();
-            existing.setFullName("Existing");
-            existing.setEmail("duplicate@example.com");
-            existing.setBirthDate(LocalDate.of(2000,10,10));
-            existing.setActive(true);
+        repository.save(existing);
 
-            repository.save(existing);
+        // Crear la solicitud con el mismo email
+        StudentRequestData req = new StudentRequestData();
+        req.setFullName("Another User");
+        req.setEmail("duplicate@example.com");
+        req.setBirthDate(LocalDate.of(1999, 5, 15));
 
-            StudentRequestData req = new StudentRequestData();
-            req.setFullName("Duplicate");
-            req.setEmail("duplicate@example.com"); // duplicate email
-            req.setBirthDate(LocalDate.of(2000,10,1));
-
-            assertThatThrownBy(() -> service.create(req)).isInstanceOf(ConflictException.class);
-        }
+        // Verificar que el servicio lanza excepción por email duplicado
+        assertThatThrownBy(() -> service.create(req)).isInstanceOf(ConflictException.class);
+    }
 }
-
-
-
