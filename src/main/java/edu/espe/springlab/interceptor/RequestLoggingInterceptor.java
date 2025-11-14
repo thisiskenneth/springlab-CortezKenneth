@@ -5,13 +5,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.swing.plaf.basic.BasicSplitPaneUI;
-
 @Component
 public class RequestLoggingInterceptor implements HandlerInterceptor {
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // Token simulado
         final String VALID_TOKEN = "eltoken19";
 
         String authHeader = request.getHeader("Authorization");
@@ -21,30 +19,11 @@ public class RequestLoggingInterceptor implements HandlerInterceptor {
             System.out.println("❌ Bloqueado: Token inválido o ausente");
             return false;
         }
+
         request.setAttribute("t0", System.currentTimeMillis());
         System.out.println("✅ Autorizado -> " + request.getMethod() + " " + request.getRequestURI());
         return true;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //posthandle
-
-
-
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
