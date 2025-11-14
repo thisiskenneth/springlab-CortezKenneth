@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(StudentServiceImpl.class)
@@ -25,10 +26,10 @@ public class StudentServiceTest {
     @Autowired
     private StudentRepository repository;
 
-    // -------------------------
+    // --------------------------------------------------------
     // Kenneth Cortez – Examen
-    // Prueba 1: evitar email duplicado
-    // -------------------------
+    // PRUEBA 1: Evitar correos duplicados
+    // --------------------------------------------------------
     @Test
     void shouldNotAllowDuplicateEmail() {
 
@@ -49,11 +50,43 @@ public class StudentServiceTest {
     }
 
 
-    // Kenneth Cortez
-
+    // --------------------------------------------------------
+    // Kenneth Cortez – Examen
+    // PRUEBA 2: Excepción al consultar ID inexistente
+    // --------------------------------------------------------
     @Test
     void shouldThrowNotFoundExceptionWhenIdDoesNotExist() {
         assertThatThrownBy(() -> service.getById(9999L))
                 .isInstanceOf(NotFoundException.class);
     }
+
+
+    // --------------------------------------------------------
+    // Kenneth Cortez – Examen
+    // PRUEBA 3: Desactivar estudiante (PATCH)
+    // --------------------------------------------------------
+    @Test
+    void shouldVerifyStudentIsDeactivated() {
+
+        // Crear estudiante activo
+        Student existing = new Student();
+        existing.setFullName("Existing User");
+        existing.setEmail("existing@example.com");
+        existing.setBirthDate(LocalDate.of(2000, 10, 10));
+        existing.setActive(true);
+
+        repository.save(existing);
+
+        // Llamar al metodo que desactiva
+        service.deactivate(existing.getId());
+
+        // Consultar nuevamente
+        Student updated = repository.findById(existing.getId()).orElseThrow();
+
+        // Verificar estado actualizado
+        assertThat(updated.getActive()).isFalse();
+        assertThat(updated.getEmail()).isEqualTo("existing@example.com");
+        assertThat(updated.getFullName()).isEqualTo("Existing User");
+    }
+
 }

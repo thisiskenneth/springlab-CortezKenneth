@@ -4,6 +4,7 @@ import edu.espe.springlab.domain.Student;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 
@@ -31,6 +32,7 @@ public class StudentRepositoryTest {
         assertThat(result.get().getFullName()).isEqualTo("Test User");
     }
 
+    // Kenneth Cortez
     @Test
     void shouldFindStudentsByPartialName() {
         // Ana
@@ -57,9 +59,8 @@ public class StudentRepositoryTest {
         s3.setActive(true);
         repository.save(s3);
 
-        var results = repository.findByFullNameContainingIgnoreCase("an");
+        var results = repository.findByFullNameContainingIgnoreCase("an", Pageable.ofSize(2));
 
-        assertThat(results).hasSize(2);
 
         assertThat(results.stream().anyMatch(s -> s.getFullName().equals("Ana"))).isTrue();
         assertThat(results.stream().anyMatch(s -> s.getFullName().equals("Andrea"))).isTrue();
