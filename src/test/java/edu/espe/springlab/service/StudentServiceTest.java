@@ -5,6 +5,7 @@ import edu.espe.springlab.dto.StudentRequestData;
 import edu.espe.springlab.repository.StudentRepository;
 import edu.espe.springlab.service.impl.StudentServiceImpl;
 import edu.espe.springlab.web.advice.ConflictException;
+import edu.espe.springlab.web.advice.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,24 +25,35 @@ public class StudentServiceTest {
     @Autowired
     private StudentRepository repository;
 
+    // -------------------------
+    // Kenneth Cortez – Examen
+    // Prueba 1: evitar email duplicado
+    // -------------------------
     @Test
     void shouldNotAllowDuplicateEmail() {
-        // Crear y guardar un estudiante existente
+
         Student existing = new Student();
         existing.setFullName("Existing User");
         existing.setEmail("duplicate@example.com");
         existing.setBirthDate(LocalDate.of(2000, 10, 10));
         existing.setActive(true);
-
         repository.save(existing);
 
-        // Crear la solicitud con el mismo email
         StudentRequestData req = new StudentRequestData();
         req.setFullName("Another User");
         req.setEmail("duplicate@example.com");
         req.setBirthDate(LocalDate.of(1999, 5, 15));
 
-        // Verificar que el servicio lanza excepción por email duplicado
-        assertThatThrownBy(() -> service.create(req)).isInstanceOf(ConflictException.class);
+        assertThatThrownBy(() -> service.create(req))
+                .isInstanceOf(ConflictException.class);
+    }
+
+
+    // Kenneth Cortez
+
+    @Test
+    void shouldThrowNotFoundExceptionWhenIdDoesNotExist() {
+        assertThatThrownBy(() -> service.getById(9999L))
+                .isInstanceOf(NotFoundException.class);
     }
 }
