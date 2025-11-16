@@ -26,9 +26,16 @@ public class RequestLoggingInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        Long t0 = (Long)request.getAttribute("t0");
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+            throws Exception {
+
+        Long t0 = (Long) request.getAttribute("t0");
         long elapsed = (t0 == null ? 0 : System.currentTimeMillis() - t0);
-        System.out.println("afterCompletion -> status = " + response.getStatus() + "tiempo = " + elapsed + "ms");
+
+        response.addHeader("X-Elapsed-Time", elapsed + "ms");
+
+        System.out.println("afterCompletion -> status = " + response.getStatus()
+                + " tiempo = " + elapsed + "ms");
     }
+
 }

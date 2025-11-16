@@ -16,6 +16,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     //Responder si existe el estudiante con ese email
     boolean existsByEmail(String email);
 
+    //Kenneth Cortez
     // Nuevo metodo para búsqueda con paginación
     Page<Student> findByFullNameContainingIgnoreCase(String name, Pageable pageable);
 }
