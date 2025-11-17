@@ -20,3 +20,7 @@ spring:
 #Configurar el servidor embebido (Tomcat)
 server:
   port: 8080
+
+##Version
+app:
+  version: "${APP_VERSION:local}"
