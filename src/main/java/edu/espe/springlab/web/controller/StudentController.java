@@ -22,6 +22,8 @@ public class StudentController {
         this.studentService=studentService;
     }
 
+    int x = 10 / 0;
+
     @PostMapping
     public ResponseEntity<StudentResponse> create(@Valid @RequestBody
                                                   StudentRequestData request){
