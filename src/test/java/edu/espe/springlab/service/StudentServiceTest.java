@@ -42,7 +42,7 @@ public class StudentServiceTest {
 
         StudentRequestData req = new StudentRequestData();
         req.setFullName("Another User");
-        req.setEmail("duplicate@example.com");
+        req.setEmail("duplicate@example.com")
         req.setBirthDate(LocalDate.of(1999, 5, 15));
 
         assertThatThrownBy(() -> service.create(req))
