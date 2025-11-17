@@ -5,7 +5,6 @@ spring:
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    #Configuracion de JPA/Hibernate
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,20 +13,16 @@ spring:
       hibernate:
         format_sql: true
 
-    #Configuracion de Jackson
   jackson:
     serialization:
       write-dates-as-timestamps: false
 
-      #Configurar DevTools
   devtools:
     restart:
       enabled: true
 
-#Configurar el servidor embebido (Tomcat)
-server:
-  port: 8080
-
-##Version
 app:
   version: "${APP_VERSION:local}"
+
+server:
+  port: 8080
