@@ -13,7 +13,9 @@ jobs:
 
     steps:
       - name: 🔢 Generate version
-        run: echo "APP_VERSION=${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}" >> $GITHUB_ENV
+        run: |
+          VERSION="${GITHUB_RUN_NUMBER}-${GITHUB_SHA:0:7}"
+          echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: 📌 Update APP_VERSION in Render (env var)
         run: |
