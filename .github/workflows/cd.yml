@@ -13,6 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 📌 Set version in Render
+        run: |
+          curl -X PATCH \
+            -H "Authorization: Bearer $RENDER_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"envVars":[{"key":"APP_VERSION","value":"'${{ github.run_number }}'"}]}' \
+            https://api.render.com/v1/services/$SERVICE_ID
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+
       - name: 🚀 Trigger Render Deploy Hook
         run: curl -X POST "$RENDER_DEPLOY_HOOK"
         env:
@@ -20,7 +31,7 @@ jobs:
 
   rollback_if_failed:
     needs: deploy
-    if: ${{ failure() }}   # Solo se ejecuta si 'deploy' falla
+    if: ${{ failure() }}
     runs-on: ubuntu-latest
 
     steps:
