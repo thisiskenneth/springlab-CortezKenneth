@@ -27,7 +27,7 @@ public class StudentServiceTest {
     private StudentRepository repository;
 
     // --------------------------------------------------------
-    // Kenneth Cortez – Examen
+    // Kenneth Cortez
     // PRUEBA 1: Evitar correos duplicados
     // --------------------------------------------------------
     @Test

@@ -13,22 +13,39 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 public class StudentRepositoryTest {
 
+    // Spring inyecta la instancia del repositorio que vamos a probar.
     @Autowired
     private StudentRepository repository;
 
+    /**
+     * Prueba para verificar que se puede guardar un estudiante y luego encontrarlo
+     * usando su correo electrónico (email).
+     */
     @Test
     void shouldSaveAndFindStudentByEmail() {
+        // --- 1. ARRANGE (PREPARACIÓN) ---
+        // Crea una nueva instancia de la entidad Student.
         Student s = new Student();
+        // Establece los datos necesarios para la prueba.
         s.setFullName("Test User");
-        s.setEmail("test@example.com");
+        s.setEmail("test@example.com"); // Email que usaremos para la búsqueda.
         s.setBirthDate(LocalDate.of(2000, 10, 10));
         s.setActive(true);
 
+        // --- 2. ACT (EJECUCIÓN) ---
+        // Llama al metodo 'save' del repositorio para persistir la entidad.
         repository.save(s);
 
+        // Llama al metodo personalizado 'findByEmail' para recuperar el estudiante.
+        // Se espera que este metodo devuelva un Optional<Student>.
         var result = repository.findByEmail("test@example.com");
 
+        // --- 3. ASSERT (VERIFICACIÓN) ---
+        // Aserción 1: Verifica que el Optional contenga un valor, es decir, que el estudiante fue encontrado.
         assertThat(result).isPresent();
+
+        // Aserción 2: Verifica que el nombre del estudiante encontrado sea el correcto.
+        // Se usa .get() solo después de haber verificado que .isPresent() es true.
         assertThat(result.get().getFullName()).isEqualTo("Test User");
     }
 
