@@ -12,26 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: 🔢 Generate version
         run: |
           VERSION="${GITHUB_RUN_NUMBER}-${GITHUB_SHA:0:7}"
           echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: 📌 Update APP_VERSION in Render (env var)
+      - name: 📝 Insertar versión en application.yml
         run: |
-          curl -X PATCH "https://api.render.com/v1/services/${SERVICE_ID}" \
-            -H "Authorization: Bearer ${RENDER_API_KEY}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "envVarsToUpdateBehavior":"overwrite",
-              "envVars":[
-                {"key":"APP_VERSION","value":"'"${APP_VERSION}"'"}
-              ]
-            }'
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
-          APP_VERSION: ${{ env.APP_VERSION }}
+          sed -i "s|version:.*|version: \"${APP_VERSION}\"|" src/main/resources/application.yml
 
       - name: 🚀 Trigger Render Deploy Hook
         run: curl -X POST "$RENDER_DEPLOY_HOOK"
