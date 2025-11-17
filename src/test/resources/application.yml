@@ -16,3 +16,7 @@ spring:
   logging:
     level:
       root: WARN
+
+##Version
+app:
+  version: "${APP_VERSION:local}"
