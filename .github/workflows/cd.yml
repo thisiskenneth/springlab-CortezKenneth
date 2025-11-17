@@ -20,9 +20,10 @@ jobs:
       - name: 🚀 Trigger Render Deploy Hook (with version)
         run: |
           echo "Deploying version: $APP_VERSION"
-          curl -X POST "$RENDER_DEPLOY_HOOK?env[APP_VERSION]=$APP_VERSION"
+          curl -X POST "$RENDER_DEPLOY_HOOK&env%5BAPP_VERSION%5D=$APP_VERSION"
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          APP_VERSION: ${{ github.run_number }}
 
   rollback_if_failed:
     needs: deploy
