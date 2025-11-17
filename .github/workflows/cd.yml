@@ -13,12 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 📌 Generate APP_VERSION
+        run: echo "APP_VERSION=${GITHUB_RUN_NUMBER}-${GITHUB_SHA}" >> $GITHUB_ENV
+
       - name: 📌 Set version in Render
         run: |
           curl -X PATCH \
             -H "Authorization: Bearer $RENDER_API_KEY" \
             -H "Content-Type: application/json" \
-            -d '{"envVars":[{"key":"APP_VERSION","value":"'${{ github.run_number }}'"}]}' \
+            -d '{"envVars":[{"key":"APP_VERSION","value":"'"$APP_VERSION"'"}]}' \
             https://api.render.com/v1/services/$SERVICE_ID
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
