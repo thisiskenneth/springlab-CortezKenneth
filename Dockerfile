@@ -4,15 +4,9 @@ WORKDIR /app
 COPY . .
 RUN gradle clean bootJar
 
-# Etapa 2: Run
+# Etapa 2: Runtime
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
-
-# --- NUEVO ---
-ARG APP_VERSION
-ENV APP_VERSION=${APP_VERSION}
-
 COPY --from=builder /app/build/libs/*.jar app.jar
-
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","app.jar"]
